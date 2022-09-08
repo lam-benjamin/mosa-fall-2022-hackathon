@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import mosa.fall2022.processor.Processor;
+import mosa.fall2022.utils.Data;
 import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
 import org.junit.After;
@@ -33,10 +34,10 @@ public class BasicTests {
         Employee e2 = new Employee("Joe", 10, new int[]{2, 4, 6, 8} );
         Processor processor = new Processor();
         processor.initAvailabilityMap(Arrays.asList(e1, e2), 30);
-        Map<Integer, Set<Employee>>  results = processor.availabilityMap;
+        Map<Integer, Set<Employee>>  results = Data.availabilityMap;
 
-        for(Integer day: processor.availabilityMap.keySet() ){
-            System.out.println( day + ":" + processor.availabilityMap.get(day).size() );
+        for(Integer day: Data.availabilityMap.keySet() ){
+            System.out.println( day + ":" + Data.availabilityMap.get(day).size() );
         }
 
     }
