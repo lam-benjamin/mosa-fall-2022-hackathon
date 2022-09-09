@@ -3,6 +3,7 @@ package mosa.fall2022.processor;
 import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.Data;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Processor {
 
@@ -10,7 +11,7 @@ public class Processor {
 	//sub-schedules first. If any valid sub-schedule makes it impossible to find a valid sub-schedule in a different range of days, then we'll pop the most
 	//recent valid sub-schedule (the least time-consuming one to dfs again) from the stack and using the [root, leaf] nodes from that sub-schedule, find
 	//a new valid sub-schedule in that tree. 
-	public Stack<Node[]> validSubSchedules = new Stack<Node[]>();
+	public static Stack<Node[]> validSubSchedules = new Stack<Node[]>();
 	
     public Processor(){
     }
@@ -37,10 +38,12 @@ public class Processor {
     		return true; 
     	} 
     	
-    	//iterate through the set of Employees in the start Node's toExplore list
-    	Iterator<Employee> it = start.toExplore.iterator();
+    	//shuffle and iterate through the set of Employees in the start Node's toExplore list
+    	List<Employee> toExploreShuffled = start.toExplore.stream().collect(Collectors.toList());
+    	Collections.shuffle(toExploreShuffled);
+    	Iterator<Employee> it = toExploreShuffled.iterator();
     	while (it.hasNext()) {
-    		
+    	    		
     		Employee nextEmployee = it.next();
     		
     		if (!start.explored.contains(nextEmployee)) {
@@ -84,6 +87,8 @@ public class Processor {
         for (int d = 1; d <= numOfDays; d++){
             Data.availabilityMap.put(d, new HashSet<Employee>());
         }
+        Data.employees = employees;
+        Data.daysInMonth = numOfDays;
         addEmployeesToAvailabilityMap(employees);
     }
 
