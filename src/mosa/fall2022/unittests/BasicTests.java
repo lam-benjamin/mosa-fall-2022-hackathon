@@ -4,6 +4,7 @@ package mosa.fall2022.unittests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import mosa.fall2022.processor.Node;
 import mosa.fall2022.processor.Processor;
 import mosa.fall2022.utils.Data;
 import mosa.fall2022.utils.Employee;
@@ -50,5 +51,27 @@ public class BasicTests {
         days.add(20);
         throw new InsufficientEmployeeException(days);
     }
+    
+    
+    @Test
+    //TODO getting weird "source not found" error
+    public void testDoDFS() {
+    	Employee e1 = new Employee("Ben", 10, new int[]{1, 2, 3, 4, 5, 6, 7, 8} );
+        Employee e2 = new Employee("Joe", 10, new int[]{1, 2, 4, 5, 6, 8} );
+        Processor processor = new Processor();
+        processor.initAvailabilityMap(Arrays.asList(e1, e2), 8);
+        
+        processor.dfs(1, 8);
+        
+        Node root = processor.validSubSchedules.peek()[0];
+        Node node = processor.validSubSchedules.peek()[1];
+        System.out.println(node.assignedEmployee.getName());
+        
+        while (!(node = node.parent).equals(root)) {
+        	System.out.println(node.assignedEmployee.getName());
+        }
+    }
+    
+    
 
 }

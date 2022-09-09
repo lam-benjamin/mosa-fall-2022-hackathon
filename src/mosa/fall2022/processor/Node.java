@@ -8,12 +8,13 @@ import mosa.fall2022.utils.Employee;
 
 public class Node {
 	
-	int day;
-	Node parent;
-	Employee assignedEmployee;
+	public int day;
+	public Node parent;
+	public Employee assignedEmployee;
 	
 	boolean valid = true;
 	Set<Employee> toExplore = new HashSet<Employee>();
+	Set<Employee> explored = new HashSet<Employee>();
 	
 	public Node(int day, Node parent, Employee assignedEmployee) {
 		
@@ -22,7 +23,8 @@ public class Node {
 		this.assignedEmployee = assignedEmployee;
 		
 		if (parent != null && assignedEmployee != null) { //root nodes will have null parents and assignedEmployees, so only do the following for non-roots
-			parent.toExplore.remove(assignedEmployee); //remove this employee from the parent's set of employees to explore
+			//parent.toExplore.remove(assignedEmployee); //remove this employee from the parent's set of employees to explore
+			parent.explored.add(assignedEmployee);
 			
 			if (assignedEmployee.equals(parent.assignedEmployee)) { //check for validity i.e. consecutive days TODO and check for quota
 				this.valid = false;

@@ -10,7 +10,7 @@ public class Processor {
 	//sub-schedules first. If any valid sub-schedule makes it impossible to find a valid sub-schedule in a different range of days, then we'll pop the most
 	//recent valid sub-schedule (the least time-consuming one to dfs again) from the stack and using the [root, leaf] nodes from that sub-schedule, find
 	//a new valid sub-schedule in that tree. 
-	Stack<Node[]> validSubSchedules = new Stack<Node[]>();
+	public Stack<Node[]> validSubSchedules = new Stack<Node[]>();
 	
     public Processor(){
     }
@@ -41,11 +41,15 @@ public class Processor {
     	Iterator<Employee> it = start.toExplore.iterator();
     	while (it.hasNext()) {
     		
-    		Node newNode = new Node(start.day + 1, start, it.next()); //create a new node, which removes the Node's Employee from start.toExplore
+    		Employee nextEmployee = it.next();
     		
-    		if (newNode.valid && doDFS(newNode, to)) { //if this new node is valid, doDFS on it
-    			return true;
-    		}
+    		if (!start.explored.contains(nextEmployee)) {
+    			Node newNode = new Node(start.day + 1, start, nextEmployee); //create a new node, which removes the Node's Employee from start.toExplore
+    			
+    			if (newNode.valid && doDFS(newNode, to)) { //if this new node is valid, doDFS on it
+        			return true;
+        		}
+    		}    		
     	}
     	
     	return false;
