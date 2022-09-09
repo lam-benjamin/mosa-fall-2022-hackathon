@@ -25,6 +25,23 @@ public class Employee {
         return availability;
     }
 
+    public SortedSet getSchedule(){
+        return this.schedule;
+    }
+
+    public boolean assignDay(int day){
+        if (
+            !availability.contains(day) ||
+            schedule.size() >= quota ||
+            schedule.contains(day-1) ||
+            schedule.contains(day+1)
+        ){
+            return false;
+        }
+        schedule.add(day);
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +

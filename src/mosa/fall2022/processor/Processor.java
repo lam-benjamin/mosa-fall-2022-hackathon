@@ -1,15 +1,20 @@
 package mosa.fall2022.processor;
 
 import mosa.fall2022.utils.Employee;
+import mosa.fall2022.utils.Schedule;
+import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
+
 import java.util.*;
 
 public class Processor {
 
-    public Map<Integer, Set<Employee>> availabilityMap = new TreeMap<>();
+    public Schedule schedule;
+    public Map<Integer, Set<Employee>> availabilityMap;
 
-    public Processor(){
-
-
+    public Processor(List<Employee> employees, int days){
+        schedule = new Schedule(days);
+        availabilityMap = new TreeMap<>();
+        initAvailabilityMap(employees, days);
     }
 
 
@@ -28,4 +33,71 @@ public class Processor {
             }
         }
     }
+
+    public void checkIfAssignmentIsImpossible(){
+        int totalDays = schedule.getTotalDays();
+        List<Integer> emptyDays = new ArrayList<Integer>();
+        for(int d = 1; d <= totalDays; d++){
+            if( schedule.getEmployeeAssignedForGivenDay(d) != null){
+                continue;
+            }
+            if ( availabilityMap.get(d).size() == 0){
+                emptyDays.add(d);
+            }
+        }
+
+        if (!emptyDays.isEmpty() ){
+            throw new InsufficientEmployeeException(emptyDays);
+        }
+    }
+
+    public Schedule assignEmployeesDeterministically(){
+        int filledDays = -1;
+        while(filledDays != schedule.getFilledDays()){
+            filledDays = schedule.getFilledDays();
+
+            Integer day = findDayWithLoneCandidate();
+            if (day == null){
+                return schedule;
+            }
+
+            assignLoneCandidate(day);
+            checkIfAssignmentIsImpossible();
+        }
+
+        return schedule;
+    }
+
+    public Integer findDayWithLoneCandidate(){
+        for(int day: availabilityMap.keySet()){
+            if (
+                schedule.getEmployeeAssignedForGivenDay(day) == null
+                &&  availabilityMap.get(day).size() == 1
+            ){
+                return day;
+            }
+        }
+        return null;
+    }
+
+    public void assignLoneCandidate(int day){
+        for(Employee e: availabilityMap.get(day) ){
+            if ( !schedule.assignEmployee(day, e) ){
+                throw new RuntimeException("Lone employee quota met for day:" + day );
+            }
+            removeEmployeeForNeighboringDays(e, day);
+        }
+    }
+
+    public void removeEmployeeForNeighboringDays(Employee employee, int day){
+        int dayBefore = day - 1;
+        int dayAfter = day + 1;
+        if (dayBefore >= 1){
+            availabilityMap.get(dayBefore).remove(employee);
+        }
+        if (dayAfter <= schedule.getTotalDays() ) {
+            availabilityMap.get(dayAfter).remove(employee);
+        }
+    }
+
 }
