@@ -1,7 +1,5 @@
 package mosa.fall2022.utils;
 
-import java.util.*;
-
 public class Schedule {
 
     int totalDays;
@@ -42,7 +40,7 @@ public class Schedule {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < schedule.length; i++){
             if (schedule[i] != null){
-                stringBuilder.append((i+1) + ":" + schedule[i].getName() + "\n");
+                stringBuilder.append((i+1) + ": " + schedule[i].getName() + "\n");
             } else {
                 stringBuilder.append((i+1) + " is empty\n");
             }

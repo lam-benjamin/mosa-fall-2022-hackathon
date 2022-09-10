@@ -19,7 +19,6 @@ public class Node {
 	Set<Employee> explored = new HashSet<Employee>();
 	public HashMap<Employee, Integer> shiftCountsCart = new HashMap<Employee, Integer>();
 	
-	@SuppressWarnings("unchecked")
 	public Node(GraphTraversalHelper graphTraversalHelper, int day, Node parent, Employee assignedEmployee) {
 		this.graphTraversalHelper = graphTraversalHelper;
 		this.day = day;
@@ -30,7 +29,7 @@ public class Node {
 
 	private void initNode(){
 		if (parent == null || assignedEmployee == null){
-			//TODO: clarify "root nodes will have null parents and assignedEmployees, so only do the following for non-roots"
+			//root nodes are initialized as "Node root = new Node(this, from-1, null, null)" for day 0, no assignedEmployee and no parent
 			initRootNode();
 		} else {
 			initNonRootNode();
@@ -48,25 +47,16 @@ public class Node {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initNonRootNode(){
 		parent.explored.add(assignedEmployee); //mark this employee as explored
 
 		this.shiftCountsCart = (HashMap<Employee, Integer>) parent.shiftCountsCart.clone();
-		Integer updatedTentativeShiftCount = this.shiftCountsCart.get(assignedEmployee) + 1; //this employee's tentative shift count is now their tentative shift count from the previous node + 1
-		this.shiftCountsCart.put(assignedEmployee, updatedTentativeShiftCount); //save that new tentative shift count in this node for access by child node
+		Integer updatedShiftCount = this.shiftCountsCart.get(assignedEmployee) + 1; //this employee's tentative shift count is now their tentative shift count from the previous node + 1
+		this.shiftCountsCart.put(assignedEmployee, updatedShiftCount); //save that new tentative shift count in this node for access by child node
 
-		if (assignedEmployee.equals(parent.assignedEmployee) || updatedTentativeShiftCount > assignedEmployee.getQuota()) { //check for validity i.e. consecutive days or new shift count is over employee's quota
+		if (assignedEmployee.equals(parent.assignedEmployee) || updatedShiftCount > assignedEmployee.getQuota()) { //check for validity i.e. consecutive days or new shift count is over employee's quota
 			this.valid = false;
 		}
 	}
-  
-	/**
-	 * If a valid leaf node is found, constituting a valid sub-schedule, but a subsequent sub-schedule has no solution, use this.isInvalid() to set this
-	 * previously valid leaf node to invalid. This ensures that further calls of DFS on the root node of this tree will not return true on this leaf node
-	 * TODO implement when implementing pops off the stack of valid subscheduless
-	 */
-	public void isInvalid() {
-		this.valid = false;
-	}
-	
 }

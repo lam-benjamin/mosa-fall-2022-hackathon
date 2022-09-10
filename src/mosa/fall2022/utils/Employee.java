@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 public class Employee {
     private String name;
     private int quota;
-    private int shiftCount = 0;
     private SortedSet<Integer> availability;
     private SortedSet<Integer> schedule = new TreeSet<Integer>();
 
@@ -18,7 +17,7 @@ public class Employee {
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
-    public SortedSet getSchedule(){
+    public SortedSet<Integer> getSchedule(){
         return this.schedule;
     }
 
@@ -49,7 +48,7 @@ public class Employee {
     	return this.quota;
     }
     public int getShiftCount() {
-    	return this.shiftCount;
+    	return this.schedule.size();
     }
     public SortedSet<Integer> getAvailability(){
         return availability;
@@ -60,8 +59,9 @@ public class Employee {
         return "Employee{" +
                 "name='" + name + '\'' +
                 ", quota=" + quota +
-                ", availability=" + availability +
                 ", schedule=" + schedule +
+                ", availability=" + availability +
                 '}';
     }
+    
 }

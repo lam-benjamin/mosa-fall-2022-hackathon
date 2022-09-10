@@ -1,21 +1,14 @@
 package mosa.fall2022.processor;
 
 import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.Data;
 import mosa.fall2022.utils.Schedule;
 import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Processor {
 
-	//initialize empty stack to keep track of valid sub-schedules. We want a stack because we'll find a valid schedule for the biggest, most time consuming
-	//sub-schedules first. If any valid sub-schedule makes it impossible to find a valid sub-schedule in a different range of days, then we'll pop the most
-	//recent valid sub-schedule (the least time-consuming one to dfs again) from the stack and using the [root, leaf] nodes from that sub-schedule, find
-	//a new valid sub-schedule in that tree.
-
-    int day;
+    //int day;
     public Schedule schedule;
     public Map<Integer, Set<Employee>> availabilityMap = new TreeMap<>();
     public final List<Employee> employees;
@@ -44,11 +37,10 @@ public class Processor {
         }
     }
 
-    public void checkIfAssignmentIsImpossible(){
-        int totalDays = schedule.getTotalDays();
+    public void checkIfAssignmentIsImpossible(){;
         List<Integer> emptyDays = new ArrayList<Integer>();
-        for(int d = 1; d <= totalDays; d++){
-            if( schedule.getEmployeeAssignedForGivenDay(d) != null){
+        for(int d = 1; d <= daysInMonth; d++){
+            if (schedule.getEmployeeAssignedForGivenDay(d) != null){
                 continue;
             }
             if (availabilityMap.get(d).size() == 0){
@@ -79,10 +71,10 @@ public class Processor {
     }
 
     public Integer findDayWithLoneCandidate(){
-        for(int day: availabilityMap.keySet()){
+        for(int day = 1; day <= daysInMonth; day++){
             if (
+            	availabilityMap.get(day).size() == 1 &&
                 schedule.getEmployeeAssignedForGivenDay(day) == null
-                &&  availabilityMap.get(day).size() == 1
             ){
                 return day;
             }
@@ -109,6 +101,7 @@ public class Processor {
             availabilityMap.get(dayAfter).remove(employee);
         }
     }
+    
 
     public Schedule run(){
         assignEmployeesDeterministically();
@@ -119,10 +112,6 @@ public class Processor {
         GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth);
         graphTraversalHelper.dfs(1, daysInMonth);
 
-
-        Node root = graphTraversalHelper.rootNode;
-        Node node = graphTraversalHelper.endNode;
-
         for(
             Node currentNode = graphTraversalHelper.endNode;
             currentNode.parent != null;
@@ -130,13 +119,6 @@ public class Processor {
         ){
             schedule.assignEmployee(currentNode.day, currentNode.assignedEmployee);
         }
-
-        String output = String.valueOf(node.day) + ": " + node.assignedEmployee.getName() + " - " + node.shiftCountsCart.get(node.assignedEmployee);
-        while (!(node = node.parent).equals(root)) {
-
-        	output = String.valueOf(node.day) + ": " + node.assignedEmployee.getName() + " - " + node.shiftCountsCart.get(node.assignedEmployee) + "\n" + output;
-        }
-        System.out.println(output);
 
         return schedule;
     }
