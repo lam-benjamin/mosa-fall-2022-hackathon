@@ -18,32 +18,27 @@ public class Employee {
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
-    
-    public void assign(int day) {
-    	//update this employee object's fields
-    	this.shiftCount++;
-    	this.schedule.add(day);
-    	
-    	//and update the public availabilityMap;
-    	Data.availabilityMap.get(day).remove(this);
-    	Data.availabilityMap.get(day-1).remove(this);
-    	Data.availabilityMap.get(day+1).remove(this);
-    	
-    	//NOTE: I think it might be best to keep each Employee's availability unchanged for now, so the original availabilityMap can be reconstructed
-    	//if a certain schedule turns out to not be valid
-    	
-    	
-    	//TODO edit this when we get to fine tuning how the quotas work, not sure if this is the best approach
-    	//if a shift assignment makes an employee meet their quota, then remove that employee from all days of the availabilityMap so they don't 
-    	//receive any more shifts
-    	if (shiftCount == quota) {
-    		for (Integer d : Data.availabilityMap.keySet()) {
-    			Data.availabilityMap.get(d).remove(this);
-    		}
-    	}
+    public SortedSet getSchedule(){
+        return this.schedule;
     }
-    
-    
+
+    public boolean assignDay(int day){
+        if (schedule.contains(day)){
+            return true;
+        }
+        if (
+            !availability.contains(day) ||
+            schedule.size() >= quota ||
+            schedule.contains(day-1) ||
+            schedule.contains(day+1)
+        ){
+            return false;
+        }
+        schedule.add(day);
+        return true;
+    }
+
+
     /**
      * Getters
      */
