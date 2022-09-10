@@ -3,6 +3,8 @@ import java.util.*;
 import mosa.fall2022.processor.Node;
 import mosa.fall2022.processor.Processor;
 import mosa.fall2022.utils.Employee;
+import mosa.fall2022.utils.Schedule;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -32,20 +34,9 @@ public class Main {
         List<Employee> employees = Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
 
         Processor processor = new Processor(employees, 30);
-        
-        processor.dfs(1, 30);
+        Schedule schedule = processor.run();
+        System.out.println(schedule);
 
-        Node root = processor.rootNode;
-        Node node = processor.endNode;
-
-        String output = String.valueOf(node.day) + ": " + node.assignedEmployee.getName() + " - " + node.shiftCountsCart.get(node.assignedEmployee);
-        while (!(node = node.parent).equals(root)) {
-        	
-        	output = String.valueOf(node.day) + ": " + node.assignedEmployee.getName() + " - " + node.shiftCountsCart.get(node.assignedEmployee) + "\n" + output;
-
-        }
-        
-        System.out.println(output);
         
     }
 }

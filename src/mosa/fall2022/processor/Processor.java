@@ -2,6 +2,9 @@ package mosa.fall2022.processor;
 
 import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.Data;
+import mosa.fall2022.utils.Schedule;
+import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -12,98 +15,129 @@ public class Processor {
 	//recent valid sub-schedule (the least time-consuming one to dfs again) from the stack and using the [root, leaf] nodes from that sub-schedule, find
 	//a new valid sub-schedule in that tree.
 
-    public static Node rootNode;
-    public static Node endNode;
+    int day;
+    public Schedule schedule;
+    public Map<Integer, Set<Employee>> availabilityMap = new TreeMap<>();
+    public final List<Employee> employees;
+    public final int daysInMonth;
 	
     public Processor(List<Employee> employeeList, int numOfDays){
-        initAvailabilityMap(employeeList, numOfDays);
+        employees = employeeList;
+        daysInMonth = numOfDays;
+        schedule = new Schedule(numOfDays);
+        initAvailabilityMap();
     }
     
-    
-    /**
-     * Call dfs search on a section of the schedule using this method
-     */
-    public boolean dfs(int from, int to) {
-    	Node root = new Node(from-1, null, null); //initialize a root node
-        rootNode = root; //save root node in outer scope for reference in other methods
-    	return doDFS(root, to);
-    }
-    
-    /**
-     * Called from within dfs(int from, int to), recursively searches for the first valid schedule in that range of days
-     */
-    public boolean doDFS(Node start, int to) {
-    	
-    	//if the node that was passed into the last recursive call of doDFS is valid & the day is equal to the target day, that represents a
-    	//successful schedule, so return true and save the root and valid leaf for use later if we need to find a new valid sub-schedule in this range
-    	if (start.day == to && start.valid) {
-            endNode = start; //save the valid leaf node in outer scope for reference in other methods
-    		return true; 
-    	} 
-    	
-    	//shuffle and iterate through the set of Employees in the start Node's toExplore list
-    	List<Employee> toExploreShuffled = start.toExplore.stream().collect(Collectors.toList());
-    	Collections.shuffle(toExploreShuffled);
-    	Iterator<Employee> it = toExploreShuffled.iterator();
-    	while (it.hasNext()) {
-    	    		
-    		Employee nextEmployee = it.next();
-    		
-    		if (!start.explored.contains(nextEmployee)) {
-    			Node newNode = new Node(start.day + 1, start, nextEmployee); //create a new node, which removes the Node's Employee from start.toExplore
-    			
-    			if (newNode.valid) { //if this new node is valid, doDFS on it
-                    boolean result = doDFS(newNode, to);
-                    if ( result ){
-                        return result;
-                    }
-        		}
-    		}    		
-    	}
-    	
-    	return false;
-    }
-     
-    
-    /**
-     * repeatedly fills the schedule for all days where only one Employee is available
-     */
-    int day;
-    public void assignDaysWithOneEmployeeAvailable() {
-    	
-    	while ((day = findDaysWithOneEmployeeAvailable()) != -1) {
-    		Data.availabilityMap.get(day).forEach(employee -> employee.assign(day)); //using forEach for just one employee because there is no way to get an element from a set
-    	}
-
-    }
-    
-    /**
-     * @return day number with one employee available or -1 if there are no such days
-     */
-    public int findDaysWithOneEmployeeAvailable() {
-    	for (Set<Employee> set : Data.availabilityMap.values()) {
-    		if (set.size() == 1) {
-    			return day;
-    		}
-    	}
-    	return -1;
-    }
-    
-    public void initAvailabilityMap(List<Employee> employees, int numOfDays){
-        for (int d = 1; d <= numOfDays; d++){
-            Data.availabilityMap.put(d, new HashSet<Employee>());
+    public void initAvailabilityMap(){
+        for (int d = 1; d <= daysInMonth; d++){
+            availabilityMap.put(d, new HashSet<Employee>());
         }
-        Data.employees = employees;
-        Data.daysInMonth = numOfDays;
-        addEmployeesToAvailabilityMap(employees);
+        addEmployeesToAvailabilityMap();
     }
 
-    public void addEmployeesToAvailabilityMap(List<Employee> employees){
+    public void addEmployeesToAvailabilityMap(){
         for(Employee e: employees){
             for(Integer day: e.getAvailability()){
-                Set<Employee> availableOnDay = Data.availabilityMap.get(day);
+                Set<Employee> availableOnDay = availabilityMap.get(day);
                 availableOnDay.add(e);
             }
         }
+    }
+
+    public void checkIfAssignmentIsImpossible(){
+        int totalDays = schedule.getTotalDays();
+        List<Integer> emptyDays = new ArrayList<Integer>();
+        for(int d = 1; d <= totalDays; d++){
+            if( schedule.getEmployeeAssignedForGivenDay(d) != null){
+                continue;
+            }
+            if (availabilityMap.get(d).size() == 0){
+                emptyDays.add(d);
+            }
+        }
+
+        if (!emptyDays.isEmpty() ){
+            throw new InsufficientEmployeeException(emptyDays);
+        }
+    }
+
+    public Schedule assignEmployeesDeterministically(){
+        int filledDays = -1;
+        while(filledDays != schedule.getFilledDays()){
+            filledDays = schedule.getFilledDays();
+
+            Integer day = findDayWithLoneCandidate();
+            if (day == null){
+                return schedule;
+            }
+
+            assignLoneCandidate(day);
+            checkIfAssignmentIsImpossible();
+        }
+
+        return schedule;
+    }
+
+    public Integer findDayWithLoneCandidate(){
+        for(int day: availabilityMap.keySet()){
+            if (
+                schedule.getEmployeeAssignedForGivenDay(day) == null
+                &&  availabilityMap.get(day).size() == 1
+            ){
+                return day;
+            }
+        }
+        return null;
+    }
+
+    public void assignLoneCandidate(int day){
+        for(Employee e: availabilityMap.get(day) ){
+            if ( !schedule.assignEmployee(day, e) ){
+                throw new RuntimeException("Lone employee quota met for day:" + day );
+            }
+            removeEmployeeForNeighboringDays(e, day);
+        }
+    }
+
+    public void removeEmployeeForNeighboringDays(Employee employee, int day){
+        int dayBefore = day - 1;
+        int dayAfter = day + 1;
+        if (dayBefore >= 1){
+            availabilityMap.get(dayBefore).remove(employee);
+        }
+        if (dayAfter <= schedule.getTotalDays() ) {
+            availabilityMap.get(dayAfter).remove(employee);
+        }
+    }
+
+    public Schedule run(){
+        assignEmployeesDeterministically();
+        if (schedule.getFilledDays() == daysInMonth){
+            return schedule;
+        }
+
+        GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth);
+        graphTraversalHelper.dfs(1, daysInMonth);
+
+
+        Node root = graphTraversalHelper.rootNode;
+        Node node = graphTraversalHelper.endNode;
+
+        for(
+            Node currentNode = graphTraversalHelper.endNode;
+            currentNode.parent != null;
+            currentNode = currentNode.parent
+        ){
+            schedule.assignEmployee(currentNode.day, currentNode.assignedEmployee);
+        }
+
+        String output = String.valueOf(node.day) + ": " + node.assignedEmployee.getName() + " - " + node.shiftCountsCart.get(node.assignedEmployee);
+        while (!(node = node.parent).equals(root)) {
+
+        	output = String.valueOf(node.day) + ": " + node.assignedEmployee.getName() + " - " + node.shiftCountsCart.get(node.assignedEmployee) + "\n" + output;
+        }
+        System.out.println(output);
+
+        return schedule;
     }
 }

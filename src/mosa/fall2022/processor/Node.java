@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import mosa.fall2022.utils.Data;
 import mosa.fall2022.utils.Employee;
 
 public class Node {
@@ -12,6 +11,8 @@ public class Node {
 	public int day;
 	public Node parent;
 	public Employee assignedEmployee;
+	final GraphTraversalHelper graphTraversalHelper;
+
 	
 	boolean valid = true;
 	Set<Employee> toExplore = new HashSet<Employee>();
@@ -19,7 +20,8 @@ public class Node {
 	public HashMap<Employee, Integer> shiftCountsCart = new HashMap<Employee, Integer>();
 	
 	@SuppressWarnings("unchecked")
-	public Node(int day, Node parent, Employee assignedEmployee) {
+	public Node(GraphTraversalHelper graphTraversalHelper, int day, Node parent, Employee assignedEmployee) {
+		this.graphTraversalHelper = graphTraversalHelper;
 		this.day = day;
 		this.parent = parent;
 		this.assignedEmployee = assignedEmployee;
@@ -34,14 +36,14 @@ public class Node {
 			initNonRootNode();
 		}
 
-		if (valid && day != Data.daysInMonth) {
+		if (valid && day != graphTraversalHelper.numOfDays) {
 			//if node is valid, save the set of employees to explore assigning for the next day
-			this.toExplore = Data.availabilityMap.get(day+1);
+			this.toExplore = graphTraversalHelper.availabilityMap.get(day+1);
 		}
 	}
 
 	private void initRootNode(){
-		for (Employee e : Data.employees) {
+		for (Employee e : graphTraversalHelper.employeeList) {
 			shiftCountsCart.put(e, 0);
 		}
 	}
