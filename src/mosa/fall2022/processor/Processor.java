@@ -13,7 +13,8 @@ public class Processor {
 	//a new valid sub-schedule in that tree. 
 	public static Stack<Node[]> validSubSchedules = new Stack<Node[]>();
 	
-    public Processor(){
+    public Processor(List<Employee> employeeList, int numOfDays){
+        initAvailabilityMap(employeeList, numOfDays);
     }
     
     
