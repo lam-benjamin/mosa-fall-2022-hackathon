@@ -34,9 +34,9 @@ public class Main {
         Processor processor = new Processor(employees, 30);
         
         processor.dfs(1, 30);
-        
-        Node root = Processor.validSubSchedules.peek()[0];
-        Node node = Processor.validSubSchedules.peek()[1];
+
+        Node root = processor.rootNode;
+        Node node = processor.endNode;
 
         String output = String.valueOf(node.day) + ": " + node.assignedEmployee.getName() + " - " + node.shiftCountsCart.get(node.assignedEmployee);
         while (!(node = node.parent).equals(root)) {

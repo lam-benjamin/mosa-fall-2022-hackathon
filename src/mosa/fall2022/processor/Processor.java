@@ -10,8 +10,10 @@ public class Processor {
 	//initialize empty stack to keep track of valid sub-schedules. We want a stack because we'll find a valid schedule for the biggest, most time consuming
 	//sub-schedules first. If any valid sub-schedule makes it impossible to find a valid sub-schedule in a different range of days, then we'll pop the most
 	//recent valid sub-schedule (the least time-consuming one to dfs again) from the stack and using the [root, leaf] nodes from that sub-schedule, find
-	//a new valid sub-schedule in that tree. 
-	public static Stack<Node[]> validSubSchedules = new Stack<Node[]>();
+	//a new valid sub-schedule in that tree.
+
+    public static Node rootNode;
+    public static Node endNode;
 	
     public Processor(List<Employee> employeeList, int numOfDays){
         initAvailabilityMap(employeeList, numOfDays);
@@ -23,7 +25,7 @@ public class Processor {
      */
     public boolean dfs(int from, int to) {
     	Node root = new Node(from-1, null, null); //initialize a root node
-    	validSubSchedules.push(new Node[] {root, null}); //save root node in outer scope for reference in other methods
+        rootNode = root; //save root node in outer scope for reference in other methods
     	return doDFS(root, to);
     }
     
@@ -34,8 +36,8 @@ public class Processor {
     	
     	//if the node that was passed into the last recursive call of doDFS is valid & the day is equal to the target day, that represents a
     	//successful schedule, so return true and save the root and valid leaf for use later if we need to find a new valid sub-schedule in this range
-    	if (start.day == to && start.valid) { 
-    		validSubSchedules.peek()[1] = start; //save the valid leaf node in outer scope for reference in other methods
+    	if (start.day == to && start.valid) {
+            endNode = start; //save the valid leaf node in outer scope for reference in other methods
     		return true; 
     	} 
     	
@@ -50,8 +52,11 @@ public class Processor {
     		if (!start.explored.contains(nextEmployee)) {
     			Node newNode = new Node(start.day + 1, start, nextEmployee); //create a new node, which removes the Node's Employee from start.toExplore
     			
-    			if (newNode.valid && doDFS(newNode, to)) { //if this new node is valid, doDFS on it
-        			return true;
+    			if (newNode.valid) { //if this new node is valid, doDFS on it
+                    boolean result = doDFS(newNode, to);
+                    if ( result ){
+                        return result;
+                    }
         		}
     		}    		
     	}

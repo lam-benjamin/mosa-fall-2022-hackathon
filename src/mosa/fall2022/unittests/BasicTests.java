@@ -58,12 +58,11 @@ public class BasicTests {
     	Employee e1 = new Employee("Ben", 10, new int[]{1, 2, 3, 4, 5, 6, 7, 8} );
         Employee e2 = new Employee("Joe", 10, new int[]{1, 2, 4, 5, 6, 8} );
         Processor processor = new Processor(Arrays.asList(e1, e2), 8);
-//        processor.initAvailabilityMap(Arrays.asList(e1, e2), 8);
 
         processor.dfs(1, 8);
 
-        Node root = processor.validSubSchedules.peek()[0];
-        Node node = processor.validSubSchedules.peek()[1];
+        Node root = processor.rootNode;
+        Node node = processor.endNode;
         System.out.println(node.assignedEmployee.getName());
         
         while (!(node = node.parent).equals(root)) {
