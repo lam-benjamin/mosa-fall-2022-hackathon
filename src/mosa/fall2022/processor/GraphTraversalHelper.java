@@ -1,6 +1,7 @@
 package mosa.fall2022.processor;
 
 import mosa.fall2022.utils.Employee;
+import mosa.fall2022.utils.exceptions.RuntimeTimeoutException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,6 +13,8 @@ public class GraphTraversalHelper {
     final int numOfDays;
     public Node rootNode;
     public Node endNode;
+    private long startTime;
+    private long timeOutAfterMS = 10000;
 
     public GraphTraversalHelper(Map<Integer, Set<Employee>> availabilityMap, List<Employee> employeeList, int numOfDays){
         this.availabilityMap =  availabilityMap;
@@ -26,6 +29,7 @@ public class GraphTraversalHelper {
     public boolean dfs(int from, int to) {
         Node root = new Node(this, from-1, null, null); //initialize a root node
         rootNode = root; //save root node in outer scope for reference in other methods
+        startTime = System.currentTimeMillis();
         return doDFS(root, to);
     }
 
@@ -33,6 +37,12 @@ public class GraphTraversalHelper {
      * Called from within dfs(int from, int to), recursively searches for the first valid schedule in that range of days
      */
     public boolean doDFS(Node start, int to) {
+    	
+    	long endTime = System.currentTimeMillis();
+    	
+    	if (endTime > (startTime + timeOutAfterMS)) {
+        	throw new RuntimeTimeoutException(timeOutAfterMS);
+    	}
 
         //if the node that was passed into the last recursive call of doDFS is valid & the day is equal to the target day, that represents a
         //successful schedule, so return true and save the root and valid leaf for use later if we need to find a new valid sub-schedule in this range
@@ -60,7 +70,6 @@ public class GraphTraversalHelper {
                 }
             }
         }
-
         return false;
     }
 }

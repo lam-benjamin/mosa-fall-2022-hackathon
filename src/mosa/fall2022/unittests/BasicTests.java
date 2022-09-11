@@ -5,9 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import mosa.fall2022.processor.GraphTraversalHelper;
-import mosa.fall2022.processor.Node;
 import mosa.fall2022.processor.Processor;
-import mosa.fall2022.utils.Data;
 import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.Schedule;
 import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
@@ -41,7 +39,6 @@ public class BasicTests {
         for(Integer day: results.keySet() ){
             System.out.println( day + ":" + results.get(day).size() );
         }
-
     }
 
     @Test

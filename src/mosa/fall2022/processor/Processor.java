@@ -3,12 +3,12 @@ package mosa.fall2022.processor;
 import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.Schedule;
 import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
+import mosa.fall2022.utils.exceptions.InsufficientQuotasException;
 
 import java.util.*;
 
 public class Processor {
 
-    //int day;
     public Schedule schedule;
     public Map<Integer, Set<Employee>> availabilityMap = new TreeMap<>();
     public final List<Employee> employees;
@@ -102,8 +102,31 @@ public class Processor {
         }
     }
     
+    public int getSumOfQuotas() {
+    	int quotaSum = 0;
+    	for (Employee e : employees) {
+    		quotaSum += e.getQuota();
+    	}
+    	return quotaSum;
+    }
+    
+    public void validateInputs() {
+    	int sumOfQuotas;
+    	if ((sumOfQuotas = getSumOfQuotas()) < daysInMonth) {
+    		throw new InsufficientQuotasException(sumOfQuotas, daysInMonth);
+    	}
+    	
+    	if (sumOfQuotas >= (daysInMonth + employees.size())) {
+    		System.out.println("Warning, there are not enough days in the month to meet some or all of the employees' quotas."
+    				+ "\nThis could lead to uneven shift distribution. For best results, lower each employee's quotas by one.");
+    	}
+    	
+    }
 
     public Schedule run(){
+
+    	validateInputs();
+    	
         assignEmployeesDeterministically();
         if (schedule.getFilledDays() == daysInMonth){
             return schedule;
