@@ -17,6 +17,12 @@ public class Employee {
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
+    public Employee(String name, int quota, Collection<Integer> availability){
+        this.name = name;
+        this.quota = quota;
+        this.availability = new TreeSet(availability);
+    }
+
     public SortedSet<Integer> getSchedule(){
         return this.schedule;
     }

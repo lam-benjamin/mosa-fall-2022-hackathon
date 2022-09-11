@@ -1,8 +1,6 @@
 package mosa.fall2022.processor;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import mosa.fall2022.utils.Employee;
 
@@ -15,7 +13,7 @@ public class Node {
 
 	
 	boolean valid = true;
-	Set<Employee> toExplore = new HashSet<Employee>();
+	Set<NodeExplorationWrapper> toExplore = new TreeSet<NodeExplorationWrapper>();
 	Set<Employee> explored = new HashSet<Employee>();
 	public HashMap<Employee, Integer> shiftCountsCart = new HashMap<Employee, Integer>();
 	
@@ -37,7 +35,11 @@ public class Node {
 
 		if (valid && day != graphTraversalHelper.numOfDays) {
 			//if node is valid, save the set of employees to explore assigning for the next day
-			this.toExplore = graphTraversalHelper.availabilityMap.get(day+1);
+			Set<Employee> employeesToExplore = graphTraversalHelper.availabilityMap.get(day+1);
+			for(Employee e: employeesToExplore){
+				NodeExplorationWrapper node = new NodeExplorationWrapper(e, shiftCountsCart.get(e) );
+				this.toExplore.add(node);
+			}
 		}
 	}
 

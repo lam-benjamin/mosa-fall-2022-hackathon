@@ -52,12 +52,8 @@ public class GraphTraversalHelper {
         }
 
         //shuffle and iterate through the set of Employees in the start Node's toExplore list
-        List<Employee> toExploreShuffled = start.toExplore.stream().collect(Collectors.toList());
-        Collections.shuffle(toExploreShuffled);
-        Iterator<Employee> it = toExploreShuffled.iterator();
-        while (it.hasNext()) {
-
-            Employee nextEmployee = it.next();
+        for(NodeExplorationWrapper node: start.toExplore){
+            Employee nextEmployee = node.employee;
 
             if (!start.explored.contains(nextEmployee)) {
                 Node newNode = new Node(this, start.day + 1, start, nextEmployee); //create a new node, which removes the Node's Employee from start.toExplore
