@@ -5,16 +5,32 @@ import mosa.fall2022.Main;
 public class Demo {
 	
 	private final String path = "src/mosa/fall2022/demo/";
-	
+
+	String input0 = path + "demo0.txt";
 	String input1 = path + "demo1.txt";
 	String input2 = path + "demo2.txt";
 	String input3 = path + "demo3.txt";
 	String input4 = path + "demo4.txt";
-	String input5 = path + "demo5.txt";
+
 	
 	public Demo() {}
 	
 	public void run() {
+
+		System.out.println("Output 0:\n");
+		Main.run(input0);
+
+// 		No Possible Solution
+//		Joe: 2;   2,3,4
+//		Ben: 2; 1,2,3,4,5
+//		Ken: 2;       4,5,6
+
+		System.out.println("\n-----------------------------------------\n");
+
+		
+
+
+
 
 		
 		
@@ -22,11 +38,34 @@ public class Demo {
 		
 		
 		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		System.out.println("Output 1:\n");
 		Main.run(input1);
 		
@@ -223,7 +262,7 @@ public class Demo {
 		
 		
 		System.out.println("Output 4:\n");
-		Main.run(input4); //TODO for some reason this runs in a split second 100% of the time when I run main but doesn't run at all when in debug mode.
+		Main.run(input4);
 		
 //		Ann: 3; 1,2,3,7,9,12,13,23,24,25,29,30,40,50,60,70,80,90
 //		Ben: 3; 1,3,4,6,7,9,10,16,17,18,20,21,22,25,26,29,30,41,52,63,74,85,89
@@ -262,12 +301,7 @@ public class Demo {
 
 
 
-		System.out.println("Output 5:\n");
-		Main.run(input5);
 
-//		Joe: 2;   2,3,4
-//		Ben: 2; 1,2,3,4,5
-//		Ken: 2;       4,5,6
 		
 		
 		
