@@ -1,0 +1,16 @@
+Shift scheduler aka "Poodle" (for "Power Doodle", because it does what Doodle could and should but doesn't) by Joseph Willem Ricci & Benjamin Lam
+
+Below "INPUT STARTS HERE", input employees' availabilities line by line in the following format:
+
+Name: Quota; AvailableDay1, AvailableDay2,...,AvailableDayN
+
+For example:
+
+Brandon: 1; 1, 2, 3, 4, 8, 10
+Val: 2; 2, 6, 9
+Tom: 3; 1, 3, 6, 7, 8, 9
+Rafi: 4; 3, 5, 7, 9, 10
+
+
+INPUT STARTS HERE
+

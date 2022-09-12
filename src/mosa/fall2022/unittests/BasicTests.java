@@ -17,6 +17,8 @@ import org.junit.Test;
 import java.util.*;
 
 public class BasicTests {
+	
+	boolean randomness = false;
 
     @Test
     public void testIfJUnitWorks(){
@@ -33,7 +35,7 @@ public class BasicTests {
     public void testInitEmployeeAvailabilityMap(){
         Employee e1 = new Employee("Ben", 10, new int[]{1, 2, 3, 4, 5} );
         Employee e2 = new Employee("Joe", 10, new int[]{2, 4, 6, 8} );
-        Processor processor = new Processor(Arrays.asList(e1, e2), 30);
+        Processor processor = new Processor(Arrays.asList(e1, e2), 30, randomness);
         Map<Integer, Set<Employee>>  results = processor.availabilityMap;
 
         for(Integer day: results.keySet() ){
@@ -64,7 +66,7 @@ public class BasicTests {
         Employee e1 = new Employee("Ben", 10, new int[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12} );
         Employee e2 = new Employee("Joe", 10, new int[]{2, 4, 6, 8, 9, 10, 11, 12} );
         List<Employee> employees = Arrays.asList(e1, e2);
-        Processor processor = new Processor(employees, 12);
+        Processor processor = new Processor(employees, 12, randomness);
 
         Schedule result = processor.assignEmployeesDeterministically();
         System.out.println(result);
@@ -83,7 +85,7 @@ public class BasicTests {
         Employee e2 = new Employee("Joe", 10, new int[]{2, 4, 6, 8, 9, 10, 11, 12} );
         Employee e3 = new Employee("Sam", 10, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} );
         List<Employee> employees = Arrays.asList(e1, e2, e3);
-        Processor processor = new Processor(employees, 12);
+        Processor processor = new Processor(employees, 12, randomness);
 
         Schedule result = processor.assignEmployeesDeterministically();
         System.out.println(result);
@@ -104,7 +106,7 @@ public class BasicTests {
         Employee e1 = new Employee("Ben", 4, new int[]{1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12} );
         Employee e2 = new Employee("Joe", 10, new int[]{2, 4, 6, 8, 9, 10, 11, 12} );
         List<Employee> employees = Arrays.asList(e1, e2);
-        Processor processor = new Processor(employees, 12);
+        Processor processor = new Processor(employees, 12, randomness);
 
         try {
             processor.assignEmployeesDeterministically();
@@ -122,7 +124,7 @@ public class BasicTests {
         Employee e1 = new Employee("Ben", 10, new int[]{2, 3, 4, 5, 7, 8, 9, 10, 11, 12} );
         Employee e2 = new Employee("Joe", 10, new int[]{2, 4, 8, 9, 10, 11, 12} );
         List<Employee> employees = Arrays.asList(e1, e2);
-        Processor processor = new Processor(employees, 12);
+        Processor processor = new Processor(employees, 12, randomness);
 
         try {
             processor.assignEmployeesDeterministically();
@@ -140,7 +142,7 @@ public class BasicTests {
         Employee e1 = new Employee("Ben", 10, new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
         Employee e2 = new Employee("Joe", 10, new int[]{1, 2, 4, 8, 9, 10, 11, 12});
         List<Employee> employees = Arrays.asList(e1, e2);
-        Processor processor = new Processor(employees, 12);
+        Processor processor = new Processor(employees, 12, randomness);
 
         try {
             processor.assignEmployeesDeterministically();
@@ -183,8 +185,8 @@ public class BasicTests {
         List<Employee> employees1 = Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         List<Employee> employees2 = Arrays.asList(e11, e12, e13, e14, e15, e16, e17, e18, e19, e20); 
       
-        Processor processor1 = new Processor(employees1, 30);
-        GraphTraversalHelper gth = new GraphTraversalHelper(processor1.availabilityMap, employees1, 30);
+        Processor processor1 = new Processor(employees1, 30, randomness);
+        GraphTraversalHelper gth = new GraphTraversalHelper(processor1.availabilityMap, employees1, 30, randomness);
         
         long start1 = System.currentTimeMillis();
         gth.dfs(1, 30); //test the runtime of dfs exclusively, before deterministic algorithm has run & altered the availability map
@@ -198,7 +200,7 @@ public class BasicTests {
         
 
         
-        Processor processor2 = new Processor(employees2, 30);
+        Processor processor2 = new Processor(employees2, 30, randomness);
          
         long start3 = System.currentTimeMillis();
         processor2.run(); //test the runtime of dfs on the same schedule but with one more employee added to the availability for each day so there are no lone candidates

@@ -1,0 +1,6 @@
+
+INPUT STARTS HERE
+Joe: 2;   2,3,4,5
+Ben: 2; 1,2,3,4,5
+Ken: 2;       4,5,6
+

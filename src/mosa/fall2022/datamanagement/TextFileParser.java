@@ -41,22 +41,32 @@ public class TextFileParser {
         Pattern p = Pattern.compile(regex);
 
         boolean inputStarted = false;
+        int lineNumber = 0;
         for(String line: lines){
+        	lineNumber++;
             if ( inputDelimiter.equals(line) ){
                 inputStarted = true;
+                continue;
             }
-            if (!inputStarted || line == null || "".equals(line) ){
+            if (!inputStarted || line == null || line.isBlank() ){
                 continue;
             }
             Matcher m = p.matcher(line);
             if(!m.matches()){
+            	System.out.println("Invalid formatting in line #" + lineNumber + ": " + line);
                 continue;
             }
+            
             String name = m.group("name");
             int quota = parseInt(m.group("quota"));
+            if (quota < 1) {
+            	continue;
+            }
+
             List<Integer> availability = new ArrayList<Integer>();
             for(String dayString : m.group("availability").split("\\s|,") ){
-                int day = parseInt(dayString);
+            	int day = parseInt(dayString);
+                
                 if (day < 1){
                     continue;
                 }
@@ -65,8 +75,13 @@ public class TextFileParser {
                 }
                 availability.add(day);
             }
+            
             Employee employee = new Employee(name, quota, availability);
             employees.add(employee);
+        }
+        
+        if (numberOfDays == -1) {
+        	throw new InvalidFileException("There is an error in the formatting of the input file");
         }
 
         return employees;

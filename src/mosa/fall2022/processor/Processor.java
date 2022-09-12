@@ -4,6 +4,7 @@ import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.Schedule;
 import mosa.fall2022.utils.exceptions.InsufficientEmployeeException;
 import mosa.fall2022.utils.exceptions.InsufficientQuotasException;
+import mosa.fall2022.utils.exceptions.NoPossibleScheduleException;
 
 import java.util.*;
 
@@ -13,11 +14,13 @@ public class Processor {
     public Map<Integer, Set<Employee>> availabilityMap = new TreeMap<>();
     public final List<Employee> employees;
     public final int daysInMonth;
+    private boolean randomness;
 	
-    public Processor(List<Employee> employeeList, int numOfDays){
+    public Processor(List<Employee> employeeList, int numOfDays, boolean randomness){
         employees = employeeList;
         daysInMonth = numOfDays;
         schedule = new Schedule(numOfDays);
+        this.randomness = randomness;
         initAvailabilityMap();
     }
     
@@ -132,7 +135,7 @@ public class Processor {
             return schedule;
         }
 
-        GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth);
+        GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth, randomness);
         graphTraversalHelper.dfs(1, daysInMonth);
 
         for(
@@ -144,5 +147,7 @@ public class Processor {
         }
 
         return schedule;
+        
+        
     }
 }

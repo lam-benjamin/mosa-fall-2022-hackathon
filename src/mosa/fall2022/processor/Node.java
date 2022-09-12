@@ -10,6 +10,7 @@ public class Node {
 	public Node parent;
 	public Employee assignedEmployee;
 	final GraphTraversalHelper graphTraversalHelper;
+	private boolean randomness;
 
 	
 	boolean valid = true;
@@ -17,11 +18,12 @@ public class Node {
 	Set<Employee> explored = new HashSet<Employee>();
 	public HashMap<Employee, Integer> shiftCountsCart = new HashMap<Employee, Integer>();
 	
-	public Node(GraphTraversalHelper graphTraversalHelper, int day, Node parent, Employee assignedEmployee) {
+	public Node(GraphTraversalHelper graphTraversalHelper, int day, Node parent, Employee assignedEmployee, boolean randomness) {
 		this.graphTraversalHelper = graphTraversalHelper;
 		this.day = day;
 		this.parent = parent;
 		this.assignedEmployee = assignedEmployee;
+		this.randomness = randomness;
 		initNode();
 	}
 
@@ -36,8 +38,9 @@ public class Node {
 		if (valid && day != graphTraversalHelper.numOfDays) {
 			//if node is valid, save the set of employees to explore assigning for the next day
 			Set<Employee> employeesToExplore = graphTraversalHelper.availabilityMap.get(day+1);
+			//TODO edit in shuffle again if taking a long time
 			for(Employee e: employeesToExplore){
-				NodeExplorationWrapper node = new NodeExplorationWrapper(e, shiftCountsCart.get(e) );
+				NodeExplorationWrapper node = new NodeExplorationWrapper(e, shiftCountsCart.get(e), randomness);
 				this.toExplore.add(node);
 			}
 		}

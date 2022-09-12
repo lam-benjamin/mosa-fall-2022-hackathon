@@ -20,7 +20,7 @@ public class Employee {
     public Employee(String name, int quota, Collection<Integer> availability){
         this.name = name;
         this.quota = quota;
-        this.availability = new TreeSet(availability);
+        this.availability = new TreeSet<Integer>(availability);
     }
 
     public SortedSet<Integer> getSchedule(){
