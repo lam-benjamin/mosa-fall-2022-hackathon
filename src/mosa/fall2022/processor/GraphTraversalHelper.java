@@ -17,7 +17,7 @@ public class GraphTraversalHelper {
     public Node rootNode;
     public Node endNode;
     private long startTime;
-    private long timeOutAfterMS = 10000;
+    private long timeOutAfterMS = 5000;
     private boolean randomness;
 
     public GraphTraversalHelper(Map<Integer, Set<Employee>> availabilityMap, List<Employee> employeeList, int numOfDays, boolean randomness){
@@ -52,21 +52,21 @@ public class GraphTraversalHelper {
     		/**********************************************************************************
     		 * If not working comment out between here
     		 */////////////////////////////////////////////////////////////////////////////////
-//    		if (randomness) { //if the new processor has been called again, do not prompt again, just exit the first processor's dfs
-//    			return false;
-//    		}
-//    		UserInput ui = new UserInput();
-//    		if (ui.timeOutPrompt()) {
-//    			randomness = true;
-//    			Processor newProcessorWithRandomness = new Processor(employeeList, numOfDays, randomness);
-//    			Schedule schedule = newProcessorWithRandomness.run();
-//    			if (schedule.getFilledDays() != numOfDays) {
-//    				throw new NoPossibleScheduleException("We weren't able to find a schedule that works for all of your employees.");
-//    			}
-//    			Printer p = new Printer();
-//    			p.print(schedule);
-//    			return false;
-//    		}
+    		if (randomness) { //if the new processor has been called again, do not prompt again, just exit the first processor's dfs
+    			return false;
+    		}
+    		UserInput ui = new UserInput();
+    		if (ui.timeOutPrompt()) {
+    			randomness = true;
+    			Processor newProcessorWithRandomness = new Processor(employeeList, numOfDays, randomness);
+    			Schedule schedule = newProcessorWithRandomness.run();
+    			if (schedule.getFilledDays() != numOfDays) {
+    				throw new NoPossibleScheduleException("We weren't able to find a schedule that works for all of your employees.");
+    			}
+    			Printer p = new Printer();
+    			p.print(schedule);
+    			return false;
+    		}
     		/******************************************************************************
     		 * And here
     		 */////////////////////////////////////////////////////////////////////////////
