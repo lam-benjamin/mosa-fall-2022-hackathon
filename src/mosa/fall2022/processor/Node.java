@@ -38,7 +38,6 @@ public class Node {
 		if (valid && day != graphTraversalHelper.numOfDays) {
 			//if node is valid, save the set of employees to explore assigning for the next day
 			Set<Employee> employeesToExplore = graphTraversalHelper.availabilityMap.get(day+1);
-			//TODO edit in shuffle again if taking a long time
 			for(Employee e: employeesToExplore){
 				NodeExplorationWrapper node = new NodeExplorationWrapper(e, shiftCountsCart.get(e), randomness);
 				this.toExplore.add(node);

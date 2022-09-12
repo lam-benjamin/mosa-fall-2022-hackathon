@@ -151,7 +151,7 @@ public class Processor {
 	        return schedule;
         }
         
-        throw new NoPossibleScheduleException("test");
+        throw new NoPossibleScheduleException("No schedule was found for your input availabilies. Please double check your inputs.");
         
     }
 }

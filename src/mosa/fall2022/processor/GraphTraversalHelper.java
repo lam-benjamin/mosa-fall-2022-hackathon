@@ -1,10 +1,7 @@
 package mosa.fall2022.processor;
 
-import mosa.fall2022.ui.Printer;
 import mosa.fall2022.ui.UserInput;
 import mosa.fall2022.utils.Employee;
-import mosa.fall2022.utils.Schedule;
-import mosa.fall2022.utils.exceptions.NoPossibleScheduleException;
 import mosa.fall2022.utils.exceptions.RuntimeTimeoutException;
 import mosa.fall2022.utils.exceptions.TimeoutExitException;
 
@@ -45,25 +42,17 @@ public class GraphTraversalHelper {
     public boolean doDFS(Node start, int to) {
     	
     	//if dfs is taking a very long time, prompt user to see if they would like to run again with random node exploration instead of
-    	//ordered by who is missing the most shifts. if they want to run again, create new processor with randomness, run the processor
-    	//print the schedule and return false this processor's dfs, exiting this dfs.
+    	//ordered by who is missing the most shifts. if they want to run again, timeout this processor and catch the throw in UserInput which
+    	//creates a new processor with random node ordering for each node's toExplore sorted set.
     	long endTime = System.currentTimeMillis();
     	if (endTime > (startTime + timeOutAfterMS)) {
-
-    		/**********************************************************************************
-    		 * If not working comment out between here
-    		 */////////////////////////////////////////////////////////////////////////////////
-    		if (randomness) { //if the new processor has been called again, do not prompt again, just exit the first processor's dfs
+    		if (randomness) { //if the new processor with randomness times out, just exit the dfs to try again with longer runtime and/or edited inputs
     			return false;
     		}
 
     		if (UserInput.timeOutPrompt()) {
                 throw new TimeoutExitException();
     		}
-    		/******************************************************************************
-    		 * And here
-    		 */////////////////////////////////////////////////////////////////////////////
-
         	throw new RuntimeTimeoutException(timeOutAfterMS); //comment out if debugging
     	}
 
