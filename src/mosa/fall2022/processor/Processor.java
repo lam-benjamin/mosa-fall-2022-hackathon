@@ -138,14 +138,16 @@ public class Processor {
         GraphTraversalHelper graphTraversalHelper = new GraphTraversalHelper(availabilityMap, employees, daysInMonth, randomness);
         graphTraversalHelper.dfs(1, daysInMonth);
 
+
+        for(
+            Node currentNode = graphTraversalHelper.endNode;
+            currentNode != null && currentNode.parent != null;
+            currentNode = currentNode.parent
+        ){
+            schedule.assignEmployee(currentNode.day, currentNode.assignedEmployee);
+        }
+
         if (schedule.getFilledDays() == daysInMonth){
-	        for(
-	            Node currentNode = graphTraversalHelper.endNode;
-	            currentNode.parent != null;
-	            currentNode = currentNode.parent
-	        ){
-	            schedule.assignEmployee(currentNode.day, currentNode.assignedEmployee);
-	        }
 	        return schedule;
         }
         

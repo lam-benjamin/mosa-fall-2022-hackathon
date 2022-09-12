@@ -21,5 +21,9 @@ public class Printer {
 	public void print(Schedule schedule) {
 		System.out.println(schedule);
 	}
+
+	public void print(String message) {
+		System.out.println(message);
+	}
 	
 }

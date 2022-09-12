@@ -6,6 +6,7 @@ import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.Schedule;
 import mosa.fall2022.utils.exceptions.NoPossibleScheduleException;
 import mosa.fall2022.utils.exceptions.RuntimeTimeoutException;
+import mosa.fall2022.utils.exceptions.TimeoutExitException;
 
 import java.util.*;
 
@@ -17,7 +18,7 @@ public class GraphTraversalHelper {
     public Node rootNode;
     public Node endNode;
     private long startTime;
-    private long timeOutAfterMS = 5000;
+    private long timeOutAfterMS = 20000;
     private boolean randomness;
 
     public GraphTraversalHelper(Map<Integer, Set<Employee>> availabilityMap, List<Employee> employeeList, int numOfDays, boolean randomness){
@@ -47,30 +48,22 @@ public class GraphTraversalHelper {
     	//ordered by who is missing the most shifts. if they want to run again, create new processor with randomness, run the processor
     	//print the schedule and return false this processor's dfs, exiting this dfs.
     	long endTime = System.currentTimeMillis();
-    	if (endTime > (startTime + timeOutAfterMS)) { 
-    		
+    	if (endTime > (startTime + timeOutAfterMS)) {
+
     		/**********************************************************************************
     		 * If not working comment out between here
     		 */////////////////////////////////////////////////////////////////////////////////
     		if (randomness) { //if the new processor has been called again, do not prompt again, just exit the first processor's dfs
     			return false;
     		}
-    		UserInput ui = new UserInput();
-    		if (ui.timeOutPrompt()) {
-    			randomness = true;
-    			Processor newProcessorWithRandomness = new Processor(employeeList, numOfDays, randomness);
-    			Schedule schedule = newProcessorWithRandomness.run();
-    			if (schedule.getFilledDays() != numOfDays) {
-    				throw new NoPossibleScheduleException("We weren't able to find a schedule that works for all of your employees.");
-    			}
-    			Printer p = new Printer();
-    			p.print(schedule);
-    			return false;
+
+    		if (UserInput.timeOutPrompt()) {
+                throw new TimeoutExitException();
     		}
     		/******************************************************************************
     		 * And here
     		 */////////////////////////////////////////////////////////////////////////////
-			
+
         	throw new RuntimeTimeoutException(timeOutAfterMS); //comment out if debugging
     	}
 

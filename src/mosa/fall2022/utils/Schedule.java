@@ -26,6 +26,9 @@ public class Schedule {
         if ( !employee.assignDay(day) ){
             return false;
         }
+        if (employee.equals(this.schedule[index])){
+            return true;
+        }
         this.filledDays++;
         this.schedule[index] = employee;
         return true;

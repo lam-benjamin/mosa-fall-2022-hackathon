@@ -3,6 +3,7 @@ import java.util.*;
 
 import mosa.fall2022.datamanagement.TextFileParser;
 import mosa.fall2022.processor.Processor;
+import mosa.fall2022.ui.CommandLineUserInterface;
 import mosa.fall2022.ui.Printer;
 import mosa.fall2022.utils.Employee;
 import mosa.fall2022.utils.Schedule;
@@ -13,35 +14,38 @@ public class Main {
 	
 	
     public static void main(String[] args) {
-    	
-    	
-    	String filename;
-    	if (args.length != 0 && args[0].equals("demo")) { //if runtime arg is "demo", run the demo
-    		Demo demo = new Demo();
-    		demo.run();
-    		return;
-    		
-    	} else if (args.length != 0) { //if a runtime arg is supplied but not equal to "demo", read that file
-    		filename = args[0];
-    	
-    	} else { //if no runtime arg is supplied, read input.txt
-    		filename = "input.txt";
-    	}
 
-        TextFileParser parser = new TextFileParser(filename);
-        List<Employee> employeeList = parser.getEmployees();
-        int days = parser.getNumberOfDays();
-        
-        boolean randomness = false;
-        Processor processor = new Processor(employeeList, days, randomness);
-        Schedule schedule = processor.run();
-        
-        Printer p = new Printer();
-        p.print(schedule);
-        for (Employee employee : processor.employees) {
-        	p.print(employee);
+    	if (args.length != 0 && args[0].equals("demo")) { //if runtime arg is "demo", run the demo
+            runDemo();
+            return;
         }
 
+        String fileName = "input.txt";
+        if (args.length >= 1) { //if a runtime arg is supplied but not equal to "demo", read that file
+    		fileName = args[0];
+    	}
+        run(fileName);
+        return;
+    }
+
+    public static void runDemo(){
+        Demo demo = new Demo();
+        demo.run();
+        return;
+    }
+
+    public static void run(String fileName){
+        CommandLineUserInterface ui = new CommandLineUserInterface();
+        try{
+
+            TextFileParser parser = new TextFileParser(fileName);
+            List<Employee> employeeList = parser.getEmployees();
+            int days = parser.getNumberOfDays();
+            ui.run(employeeList, days, false);
+
+        } catch(Exception ex){
+            ui.printMessage(ex.getMessage());
+        }
     }
     
 }

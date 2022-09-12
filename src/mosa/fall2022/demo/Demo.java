@@ -6,10 +6,11 @@ public class Demo {
 	
 	private final String path = "src/mosa/fall2022/demo/";
 	
-	String[] input1 = new String[] {path + "demo1.txt"};
-	String[] input2 = new String[] {path + "demo2.txt"};
-	String[] input3 = new String[] {path + "demo3.txt"};
-	String[] input4 = new String[] {path + "demo4.txt"};
+	String input1 = path + "demo1.txt";
+	String input2 = path + "demo2.txt";
+	String input3 = path + "demo3.txt";
+	String input4 = path + "demo4.txt";
+	String input5 = path + "demo5.txt";
 	
 	public Demo() {}
 	
@@ -27,7 +28,7 @@ public class Demo {
 		
 		
 		System.out.println("Output 1:\n");
-		Main.main(input1);
+		Main.run(input1);
 		
 //		Joe: 2;   2,3,4,5
 //		Ben: 2; 1,2,3,4,5
@@ -89,7 +90,7 @@ public class Demo {
 		
 		
 		System.out.println("Output 2:\n");
-		Main.main(input2);
+		Main.run(input2);
 //		Brandon: 1; 1,2,3,4,      8,  10
 //		Val:     2;   2,      6,    9
 //		Tom:     3; 1,  3,4,  6,7,8,
@@ -156,7 +157,7 @@ public class Demo {
 
 
 		System.out.println("Output 3:\n");
-		Main.main(input3);
+		Main.run(input3);
 //		Ann: 3; 1,2,3,      7,  9,      12,13,                           23,24,25,         29,30
 //		Ben: 3; 1,  3,4,  6,7,  9,10,               16,17,18,   20,21,22,      25,26,      29,30
 //		Cid: 3; 1,  3,4,          10,   12,   14,   16,17,18,   20,         24,25
@@ -222,7 +223,7 @@ public class Demo {
 		
 		
 		System.out.println("Output 4:\n");
-		Main.main(input4); //TODO for some reason this runs in a split second 100% of the time when I run main but doesn't run at all when in debug mode.
+		Main.run(input4); //TODO for some reason this runs in a split second 100% of the time when I run main but doesn't run at all when in debug mode.
 		
 //		Ann: 3; 1,2,3,7,9,12,13,23,24,25,29,30,40,50,60,70,80,90
 //		Ben: 3; 1,3,4,6,7,9,10,16,17,18,20,21,22,25,26,29,30,41,52,63,74,85,89
@@ -248,11 +249,25 @@ public class Demo {
 		//And what if you have to fill 90 days of a schedule for 20 monkeys who have typed in a bunch of random, out-of-order days into their availabilities?
 		
 		System.out.println("\n-----------------------------------------\n");
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+		System.out.println("Output 5:\n");
+		Main.run(input5);
+
+//		Joe: 2;   2,3,4
+//		Ben: 2; 1,2,3,4,5
+//		Ken: 2;       4,5,6
 		
 		
 		

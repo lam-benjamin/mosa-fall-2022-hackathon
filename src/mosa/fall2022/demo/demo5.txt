@@ -1,0 +1,6 @@
+
+INPUT STARTS HERE
+Joe: 2;   2,3,4
+Ben: 2; 1,2,3,4,5
+Sam: 2;       4,5,6
+
