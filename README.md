@@ -13,7 +13,7 @@ two-pronged approach: 1.) deterministically eliminate all impossible assignments
 greatly restricting the size of the set of all potential schedule permutations, and then
 2.) exploratorily to try to find a path in a graph which satisfies the given constraints.
 
-Include the link to your Devpost project page here: [Devpost](https://devpost.com/software/poodle-scheduler)
+Devpost link: [Devpost](https://devpost.com/software/poodle-scheduler)
 
 ### Authors
 
@@ -28,10 +28,6 @@ This section walks a prospective user through the process of installing and runn
 
 - Java
 - any Java IDE
-
-```
-Provide code samples in this fenced code block.
-```
 
 ### Installation
 
